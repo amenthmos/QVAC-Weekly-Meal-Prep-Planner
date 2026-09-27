@@ -77,7 +77,9 @@ export async function planWeek(modelId, body) {
   text = text.trim().replace(/^here'?s[^:\n]*:\s*/i, "").trim();
 
   let steps = looksUnusable(text) ? [] : parseSteps(text);
-  if (steps.length === 0) steps = fallbackOutline(preference, days);
+  // A single stray line isn't a usable batch-cook outline either — fall
+  // back rather than showing a one-item "plan".
+  if (steps.length < 2) steps = fallbackOutline(preference, days);
   steps = steps.slice(0, 6);
 
   return { preference, days, steps };
